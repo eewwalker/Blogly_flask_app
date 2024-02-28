@@ -20,23 +20,36 @@ connect_db(app)
 
 @app.get("/")
 def redirect_to_homepage():
+
     return redirect('/users')
 
 
 @app.get("/users")
 def show_homepage():
-    return render_template('homepage.html')
+
+    users = User.query.all()
+
+    return render_template('homepage.html', users=users)
+
 
 @app.get("/users/new")
 def create_user():
-    return render_template('create_user.html')
-#     # show add form
-#     # redirect to /users
 
-# @app.post("/users/new")
-#     # process add form
-#     # add new user
-#     # redirect to /users
+    return render_template('create_user.html')
+
+
+@app.post("/users/new")
+def handle_user():
+    first_name = request.form["first_name"]
+    last_name = request.form['last_name']
+    image_url = request.form['image_url']
+
+    new_user = User(first_name=first_name, last_name=last_name, image_url=image_url)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return redirect('/users')
 
 # @app.get("/users/<int:user_id>")
 #     # show info about given user
