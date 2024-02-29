@@ -74,9 +74,6 @@ def show_edit(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('edit_user.html',
                            user=user)
-#     # edit page for user
-#     # have cancel button --> redirects to /users/<int:user_id>
-#     # save button --> updates user (update db, make sure commit)
 
 
 @app.post("/users/<int:user_id>/edit")
@@ -102,3 +99,33 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return redirect('/users')
+
+# routes for the posts
+
+# @app.get("/users/<int:user_id>/posts/new")
+# def show_post_form(user_id):
+
+
+# @app.post("/users/<int:user_id>/posts/new")
+# def handle_add_form(user_id):
+#     #add post
+#     #redirect to /users/<int:user_id>
+
+# @app.get("/posts/<int:post_id>")
+# def show_post(post_id):
+#     #show post
+#     #edit post button
+#     #delete post button
+
+# @app.get("/posts/<int:post_id>/edit")
+# def edit_post_form(post_id):
+#     #show form
+#     #edit button
+#     #cancel redirects to user page
+
+# @app.post("/posts/<int:post_id>/edit")
+# def handle_edit_form(post_id):
+#     #redirect to post vieew /posts/<int:post_id>
+
+# @app.post("/posts/<post_id>/delete")
+# def delete_post(post_id):
