@@ -4,7 +4,7 @@ import os
 
 from flask import Flask, request, render_template, redirect
 # from flask_debugtoolbar import DebugToolbarExtension
-from models import connect_db, db, User
+from models import connect_db, db, User, Post
 
 app = Flask(__name__)
 
@@ -102,8 +102,10 @@ def delete_user(user_id):
 
 # routes for the posts
 
-# @app.get("/users/<int:user_id>/posts/new")
-# def show_post_form(user_id):
+
+@app.get("/users/<int:user_id>/posts/new")
+def show_post_form(user_id):
+    return render_template('new_post.html')
 
 
 # @app.post("/users/<int:user_id>/posts/new")

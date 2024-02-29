@@ -11,5 +11,17 @@
   <input type="submit" value="delete">
 </form>
 
+<h2>Posts</h2>
+<form action="/users/{{user.id}}/posts/new" method="POST">
+  <ul>
+    {% for post in user.posts %}
+    <a href="/posts/{{post.id}}">
+      <li>{{post.title}}</li>
+    </a>
+    {% endfor%}
+  </ul>
+  <input type="submit" value="Add post">
+</form>
+
 
 {% endblock %}

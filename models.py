@@ -3,12 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 def connect_db(app):
     """Connect to database."""
 
     app.app_context().push()
     db.app = app
     db.init_app(app)
+
 
 class User(db.Model):
 
@@ -29,8 +31,9 @@ class User(db.Model):
 
     image_url = db.Column(
         db.String(50),
-        default = "img link here"
+        default="img link here"
     )
+
 
 class Post(db.Model):
 
@@ -56,7 +59,7 @@ class Post(db.Model):
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey("users.id"),
-        primary_key=True)
+        db.ForeignKey("users.id")
+    )
 
-    users = db.relationship('User', backref='post')
+    user = db.relationship('User', backref='posts')
