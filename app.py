@@ -108,16 +108,32 @@ def show_post_form(user_id):
     return render_template('new_post.html')
 
 
-# @app.post("/users/<int:user_id>/posts/new")
-# def handle_add_form(user_id):
-#     #add post
-#     #redirect to /users/<int:user_id>
+@app.post("/users/<int:user_id>/posts/new")
+def handle_add_form(user_id):
 
-# @app.get("/posts/<int:post_id>")
-# def show_post(post_id):
-#     #show post
-#     #edit post button
-#     #delete post button
+    title = request.form["title"]
+    content = request.form["content"]
+
+    post = Post(
+        title=title,
+        content=content,
+        user_id=user_id
+        )
+
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(f"/users/{user_id}")
+
+@app.get("/posts/<int:post_id>")
+def show_post(post_id):
+
+    post = Post.query.get_or_404(post_id)
+
+     #show post
+     #edit post button
+     #delete post button
+    return render_template("post_detail.html", post=post)
 
 # @app.get("/posts/<int:post_id>/edit")
 # def edit_post_form(post_id):
