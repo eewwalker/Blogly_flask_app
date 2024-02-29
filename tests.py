@@ -1,17 +1,16 @@
+from models import User
+from app import app, db
+from unittest import TestCase
 import os
 
 os.environ["DATABASE_URL"] = "postgresql:///blogly_test"
 
-from unittest import TestCase
-
-from app import app, db
-from models import DEFAULT_IMAGE_URL, User
 
 # Make Flask errors be real errors, rather than HTML pages with error info
 app.config['TESTING'] = True
 
 # This is a bit of hack, but don't use Flask DebugToolbar
-app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
+# app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
 
 # Create our tables (we do this here, so we only create the tables
 # once for all tests --- in each test, we'll delete the data
@@ -55,6 +54,7 @@ class UserViewTestCase(TestCase):
         db.session.rollback()
 
     def test_list_users(self):
+        """ Test user list html rendered """
         with app.test_client() as c:
             resp = c.get("/users")
             self.assertEqual(resp.status_code, 200)
@@ -63,6 +63,7 @@ class UserViewTestCase(TestCase):
             self.assertIn("test1_last", html)
 
     def test_homepage(self):
+        """ Test homepage renders """
         with app.test_client() as c:
             resp = c.get('/users/new')
             self.assertEqual(resp.status_code, 200)
@@ -70,6 +71,7 @@ class UserViewTestCase(TestCase):
             self.assertIn('<h1>Create a user </h1>', html)
 
     def test_edit(self):
+        """ Test edit page renders """
         with app.test_client() as c:
             resp = c.get('/users/1/edit')
             self.assertEqual(resp.status_code, 200)
@@ -77,18 +79,44 @@ class UserViewTestCase(TestCase):
             self.assertIn('<h1>Edit a user </h1>', html)
 
     def test_user_form_redirect(self):
+        """ Test redirect """
         with app.test_client() as c:
-            resp = c.get('/users/new')
+            resp = c.post(
+                '/users/new',
+                data={
+                    'first_name': 'bob',
+                    'last_name': 'barker',
+                    'image_url': ''
+                }
+            )
 
             self.assertEqual(resp.status_code, 302)
             self.assertEqual(resp.location, "/users")
 
-    def test_redirection_followed(self):
+    def test_user_form_redirection_followed(self):
+        """ Test redirect """
         with app.test_client() as c:
-            resp = c.get("/users/new", follow_redirects=True)
+            resp = c.post(
+                '/users/new',
+                data={
+                    'first_name': 'bob',
+                    'last_name': 'barker',
+                    'image_url': ''
+                },
+                follow_redirects=True
+
+            )
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn('<h1>Users</h1>', html)
+            self.assertIn('bob barker', html)
+            # self.assertEqual(resp.location, "/users")
 
+    # def test_redirection_followed(self):
+    #     """ Test redirection followed html rendered """
+    #     with app.test_client() as c:
+    #         resp = c.get("/users/new", follow_redirects=True)
+    #         html = resp.get_data(as_text=True)
 
+    #         self.assertEqual(resp.status_code, 200)
+    #         self.assertIn('<h1>Create a user </h1>', html)
