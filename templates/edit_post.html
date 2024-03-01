@@ -1,0 +1,17 @@
+{% block title %} Edit Post Form {% endblock %}
+
+{% block content %}
+<h1> Edit Post</h1>
+<form method="POST">
+
+  <label for="title">Edit Post</label>
+  <input name="title" value="{{post.title}}">
+
+  <label for="content">Content</label>
+  <input name="content" value="{{post.content}}">
+  <button formmethod="GET" formaction="/users/{{post.user.id}}">Cancel</button>
+  <button formmethod="POST">Edit</button>
+</form>
+
+
+{% endblock %}
